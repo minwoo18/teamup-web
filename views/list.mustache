@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>등록된 글 목록</title>
+  <style>
+    body { font-family: Arial; max-width: 800px; margin: 20px auto; }
+    .post { background: white; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+    a { text-decoration: none; color: #1976d2; }
+    h1 { font-size: 24px; }
+  </style>
+</head>
+<body>
+  <a href="/">← 글 작성 페이지로 돌아가기</a>
+  <h1>📋 등록된 팀플/스터디 모집 글</h1>
+
+  {{#posts}}
+    <div class="post">
+      <h3>{{title}}</h3>
+      <p><strong>과목:</strong> {{subject}} | <strong>작성자:</strong> {{author}} | <strong>날짜:</strong> {{date}}</p>
+      <p>{{description}}</p>
+    </div>
+  {{/posts}}
+
+  {{^posts}}
+    <p>아직 등록된 글이 없습니다.</p>
+  {{/posts}}
+</body>
+</html>

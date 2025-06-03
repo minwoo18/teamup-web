@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>TeamUp! – 팀플/스터디 매칭 플랫폼</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 10px; background: #f9f9f9; }
+    h1 { font-size: 28px; text-align: center; }
+    .post, .chat-message { border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; background: white; }
+    .chat-box { height: 200px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; background: #fff; border-radius: 8px; }
+    .form-group { margin-bottom: 10px; }
+    label { display: block; font-weight: bold; }
+    input, textarea { width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc; }
+    button { padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #135ba1; }
+  </style>
+</head>
+<body>
+  <h1>🧩 TeamUp! 팀플/스터디 매칭 플랫폼</h1>
+
+  {{#user}}
+    <p>환영합니다, {{user.displayName}}님</p>
+  {{/user}}
+
+  <div class="form-group">
+    <input type="text" id="searchTerm" placeholder="팀플 검색 (과목명/제목)">
+  </div>
+
+  {{#user}}
+  <form id="postForm">
+    <div class="form-group">
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title">
+    </div>
+    <div class="form-group">
+      <label for="subject">과목명</label>
+      <input type="text" id="subject" name="subject">
+    </div>
+    <div class="form-group">
+      <label for="description">모집 내용</label>
+      <textarea id="description" name="description"></textarea>
+    </div>
+    <button type="submit">등록하기</button>
+  </form>
+  {{/user}}
+
+  <div id="postList">
+    {{#posts}}
+      <div class="post">
+        <h3>{{title}}</h3>
+        <p><strong>과목:</strong> {{subject}} | <strong>작성자:</strong> {{author}} | <strong>날짜:</strong> {{date}}</p>
+        <p>{{description}}</p>
+      </div>
+    {{/posts}}
+  </div>
+
+  <h2>💬 팀플 채팅방</h2>
+  <div class="chat-box" id="chatBox">
+    {{#chatMessages}}
+      <div class="chat-message">
+        <strong>{{user}}</strong>: {{text}} <span style="font-size: 0.8em; color: #888">({{time}})</span>
+      </div>
+    {{/chatMessages}}
+  </div>
+  <div class="form-group">
+    <input type="text" id="newMessage" placeholder="메시지 입력...">
+    <button onclick="sendMessage()">전송</button>
+  </div>
+
+  <script>
+    const socket = io();
+
+    document.getElementById('postForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const post = {
+        title: document.getElementById('title').value,
+        subject: document.getElementById('subject').value,
+        description: document.getElementById('description').value,
+        date: new Date().toISOString().split("T")[0],
+        author: "익명"
+      };
+
+      const res = await fetch('http://localhost:3001/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+      });
+
+      if (res.ok) {
+        window.location.href = '/list';
+      } else {
+        alert('등록에 실패했습니다.');
+      }
+    });
+
+    function sendMessage() {
+      const input = document.getElementById("newMessage");
+      const msg = { user: "익명", text: input.value, time: new Date().toLocaleTimeString() };
+      socket.emit("chat_message", msg);
+      input.value = "";
+    }
+
+    socket.on("chat_message", function(msg) {
+      const box = document.getElementById("chatBox");
+      const div = document.createElement("div");
+      div.classList.add("chat-message");
+      div.innerHTML = `<strong>${msg.user}</strong>: ${msg.text} <span style='font-size: 0.8em; color: #888'>(${msg.time})</span>`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    });
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+</body>
+</html>

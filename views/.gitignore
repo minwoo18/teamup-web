@@ -1,0 +1,10 @@
+# 빌드 및 캐시 디렉토리 무시
+.gradle/
+build/
+node_modules/
+
+# 시스템 파일 무시
+.DS_Store
+
+# 환경 설정 파일 무시
+.env
