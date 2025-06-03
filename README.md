@@ -6,14 +6,6 @@
 
 ---
 
-## 📸 프로젝트 화면
-
-| 메인 화면 | 채팅 화면 | 등록된 글 목록 |
-|-----------|------------|----------------|
-| ![main](https://user-images.githubusercontent.com/your_screenshot1.png) | ![chat](https://user-images.githubusercontent.com/your_screenshot2.png) | ![list](https://user-images.githubusercontent.com/your_screenshot3.png) |
-
----
-
 ## 💡 주요 기능
 
 - ✅ 팀플/스터디 모집글 등록
