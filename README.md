@@ -47,10 +47,14 @@
 git clone https://github.com/minwoo18/teamup-web.git
 cd teamup-web
 
-접속 주소: http://localhost:3001
 
 # 모듈 설치
 npm install
 
 # 서버 실행
 node server.js
+
+
+
+
+접속 주소: http://localhost:3001
